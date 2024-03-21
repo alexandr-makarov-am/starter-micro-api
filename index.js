@@ -10,7 +10,7 @@ let queue = [];
 
 app.get('/', async (req, res) => {
     const json = [];
-    for (const i in [...new Array(5)]) {
+    for (const i in [...new Array(60)]) {
         const index = i % queue.length;
         const item = queue[index];
         if (item) {
