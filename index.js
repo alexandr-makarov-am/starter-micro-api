@@ -43,3 +43,18 @@ app.post('/queue/add', (req, res) => {
 })
 
 http.createServer(app).listen(process.env.PORT || 3000);
+
+setInterval(async () => {
+    const index = ++i % queue.length;
+    const item = queue[index];
+    if (item) {
+        const { url, method, data, hook } = item;
+        const response = await axios.request({
+            method,
+            url,
+            data
+        })
+        await axios.post(hook, { content: JSON.stringify(response.data) });
+    }
+    console.log('run interval');
+}, 1000);
