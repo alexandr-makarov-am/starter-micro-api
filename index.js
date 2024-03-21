@@ -20,7 +20,7 @@ app.get('/', async (req, res) => {
             data
         })
         await axios.post(hook, { content: JSON.stringify(res.data) });
-        return res.status(200).json(res.data);
+        return res.status(200).json(JSON.stringify(res.data));
     }
     return res.status(200).json("ok");
 })
