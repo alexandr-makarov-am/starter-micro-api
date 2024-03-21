@@ -19,10 +19,11 @@ app.get('/', (req, res) => {
             url,
             data
         }).then((res) => {
-            axios.post(hook, { content: JSON.stringify(res.data) })
+            axios.post(hook, { content: JSON.stringify(res.data) }).finally(() => {
+                res.status(200).json(res.data);
+            })
         })
     }
-    res.status(200).json("ok: " + i);
 })
 
 app.get('/queue/list', (req, res) => {
