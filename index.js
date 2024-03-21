@@ -9,21 +9,20 @@ app.use(express.json());
 let queue = [];
 let i = 0;
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
     const index = ++i % queue.length;
     const item = queue[index];
     if (item) {
         const { url, method, data, hook } = item;
-        axios.request({
+        const res = await axios.request({
             method,
             url,
             data
-        }).then((res) => {
-            axios.post(hook, { content: JSON.stringify(res.data) }).finally(() => {
-                res.status(200).json(res.data);
-            })
         })
+        await axios.post(hook, { content: JSON.stringify(res.data) });
+        return res.status(200).json(res.data);
     }
+    return res.status(200).json("ok");
 })
 
 app.get('/queue/list', (req, res) => {
