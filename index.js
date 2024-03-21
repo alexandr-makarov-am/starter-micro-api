@@ -14,13 +14,13 @@ app.get('/', async (req, res) => {
     const item = queue[index];
     if (item) {
         const { url, method, data, hook } = item;
-        const res = await axios.request({
+        const response = await axios.request({
             method,
             url,
             data
         })
-        await axios.post(hook, { content: JSON.stringify(res.data) });
-        return res.status(200).json(JSON.stringify(res.data));
+        await axios.post(hook, { content: JSON.stringify(response.data) });
+        return res.status(200).json(JSON.stringify(response.data));
     }
     return res.status(200).json("ok");
 })
