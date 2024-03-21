@@ -7,9 +7,11 @@ const app = express();
 app.use(express.json());
 
 let queue = [];
+let i = 0;
+
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('Hello World! ' + i)
 })
 
 app.get('/queue/list', (req, res) => {
@@ -30,7 +32,6 @@ app.post('/queue/add', (req, res) => {
 })
 
 http.createServer(app).listen(process.env.PORT || 3000, undefined, undefined, () => {
-    let i = 0;
     setInterval(() => {
         const index = ++i % queue.length;
         const item = queue[index];
