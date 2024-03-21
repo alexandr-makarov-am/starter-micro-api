@@ -31,19 +31,19 @@ app.post('/queue/add', (req, res) => {
     res.status(400).json("wrong payload");
 })
 
-http.createServer(app).listen(process.env.PORT || 3000, undefined, undefined, () => {
-    setInterval(() => {
-        const index = ++i % queue.length;
-        const item = queue[index];
-        if (item) {
-            const { url, method, data, hook } = item;
-            axios.request({
-                method,
-                url,
-                data
-            }).then((res) => {
-                axios.post(hook, { content: JSON.stringify(res.data) })
-            })
-        }
-    }, 2000);
-});
+http.createServer(app).listen(process.env.PORT || 3000);
+
+setInterval(() => {
+    const index = ++i % queue.length;
+    const item = queue[index];
+    if (item) {
+        const { url, method, data, hook } = item;
+        axios.request({
+            method,
+            url,
+            data
+        }).then((res) => {
+            axios.post(hook, { content: JSON.stringify(res.data) })
+        })
+    }
+}, 2000);
