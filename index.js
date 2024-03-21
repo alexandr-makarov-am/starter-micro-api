@@ -7,22 +7,24 @@ const app = express();
 app.use(express.json());
 
 let queue = [];
-let i = 0;
 
 app.get('/', async (req, res) => {
-    const index = ++i % queue.length;
-    const item = queue[index];
-    if (item) {
-        const { url, method, data, hook } = item;
-        const response = await axios.request({
-            method,
-            url,
-            data
-        })
-        await axios.post(hook, { content: JSON.stringify(response.data) });
-        return res.status(200).json(JSON.stringify(response.data));
+    const json = [];
+    for (const i in [...new Array(5)]) {
+        const index = i % queue.length;
+        const item = queue[index];
+        if (item) {
+            const { url, method, data, hook } = item;
+            const response = await axios.request({
+                method,
+                url,
+                data
+            })
+            await axios.post(hook, { content: JSON.stringify(response.data) + "   i: " + i });
+            json.push(response.data);
+        }
     }
-    return res.status(200).json("ok");
+    return res.status(200).json(json);
 })
 
 app.get('/queue/list', (req, res) => {
