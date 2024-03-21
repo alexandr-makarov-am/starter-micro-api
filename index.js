@@ -9,9 +9,20 @@ app.use(express.json());
 let queue = [];
 let i = 0;
 
-
 app.get('/', (req, res) => {
-    res.send('Hello World! ' + i)
+    const index = ++i % queue.length;
+    const item = queue[index];
+    if (item) {
+        const { url, method, data, hook } = item;
+        axios.request({
+            method,
+            url,
+            data
+        }).then((res) => {
+            axios.post(hook, { content: JSON.stringify(res.data) })
+        })
+    }
+    res.status(200).json("ok: " + i);
 })
 
 app.get('/queue/list', (req, res) => {
@@ -32,18 +43,3 @@ app.post('/queue/add', (req, res) => {
 })
 
 http.createServer(app).listen(process.env.PORT || 3000);
-
-setInterval(() => {
-    const index = ++i % queue.length;
-    const item = queue[index];
-    if (item) {
-        const { url, method, data, hook } = item;
-        axios.request({
-            method,
-            url,
-            data
-        }).then((res) => {
-            axios.post(hook, { content: JSON.stringify(res.data) })
-        })
-    }
-}, 2000);
